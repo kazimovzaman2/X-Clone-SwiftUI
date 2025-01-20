@@ -119,6 +119,9 @@ struct CreateAccountView: View {
                 .disabled(!isFormValid)
             }
         }
+        .onAppear {
+            user = CreateAccountData()
+        }
     }
 }
 

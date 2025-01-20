@@ -102,6 +102,9 @@ struct LoginView: View {
                 .disabled(!isFormValid)
             }
         }
+        .onAppear {
+            user = LoginData()
+        }
     }
 }
 
