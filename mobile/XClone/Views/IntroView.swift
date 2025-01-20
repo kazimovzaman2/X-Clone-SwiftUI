@@ -14,7 +14,6 @@ struct IntroView: View {
     var body: some View {
         NavigationView {
             VStack {
-                
                 HStack {
                     Image(colorScheme == .light ? "logoWhiteMode" : "logoDarkMode")
                         .resizable()
@@ -34,7 +33,7 @@ struct IntroView: View {
                 Spacer()
 
                 VStack(spacing: 8) {
-                    NavigationLink(destination: LoginView()) {
+                    NavigationLink(destination: LoginView(isAuthenticated: $isAuthenticated)) {
                         HStack {
                             Image("googleLogo")
                                 .resizable()
@@ -56,7 +55,7 @@ struct IntroView: View {
 
                     LabelledDivider(label: "or")
 
-                    NavigationLink(destination: CreateAccountView()) {
+                    NavigationLink(destination: CreateAccountView(isAuthenticated: $isAuthenticated)) {
                         Text("Create Account")
                             .fontWeight(.bold)
                             .frame(maxWidth: .infinity, minHeight: 50)
@@ -81,7 +80,7 @@ struct IntroView: View {
                         .font(.footnote)
                         .foregroundColor(.gray)
                     
-                    NavigationLink(destination: LoginView()) {
+                    NavigationLink(destination: LoginView(isAuthenticated: $isAuthenticated)) {
                         Text("Log in")
                             .font(.footnote)
                             .foregroundColor(.blue)

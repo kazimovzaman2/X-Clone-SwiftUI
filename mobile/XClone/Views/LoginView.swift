@@ -14,6 +14,8 @@ struct LoginView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.presentationMode) var presentationMode
 
+    @Binding var isAuthenticated: Bool
+
     enum Field: Hashable {
         case email, password
     }
@@ -88,7 +90,7 @@ struct LoginView: View {
                     isEmailValid = user.email.isValidEmail
 
                     if isEmailValid {
-                        print("Log In button tapped")
+                        isAuthenticated = true
                     }
                 }) {
                     Text("Log In")
@@ -109,5 +111,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView()
+    LoginView(isAuthenticated: .constant(false))
 }
