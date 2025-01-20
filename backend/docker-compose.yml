@@ -1,0 +1,13 @@
+version: "3.3"
+
+services:
+  x-clone:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: /start.sh
+    restart: always
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.envs/.prod/.env
