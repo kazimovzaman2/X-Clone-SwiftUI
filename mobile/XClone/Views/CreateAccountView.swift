@@ -55,24 +55,39 @@ struct CreateAccountView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 40)
 
-
             Spacer()
 
             VStack(spacing: 20) {
-                CustomTextField(placeholder: "First Name", text: $user.firstName)
+                TextField("First Name", text: $user.firstName)
+                    .textFieldStyle(PlainTextFieldStyle())
+                    .frame(height: 55)
+                    .padding([.horizontal], 7)
+                    .cornerRadius(5)
                     .overlay(RoundedRectangle(cornerRadius: 5).stroke(focusedField == .firstName ? Color.blue : Color.gray.opacity(0.8)))
                     .focused($focusedField, equals: .firstName)
 
-                CustomTextField(placeholder: "Last Name", text: $user.lastName)
+                TextField("Last Name", text: $user.lastName)
+                    .textFieldStyle(PlainTextFieldStyle())
+                    .frame(height: 55)
+                    .padding([.horizontal], 7)
+                    .cornerRadius(5)
                     .overlay(RoundedRectangle(cornerRadius: 5).stroke(focusedField == .lastName ? Color.blue: Color.gray.opacity(0.8)))
                     .focused($focusedField, equals: .lastName)
 
-                CustomTextField(placeholder: "Email", text: $user.email)
+                TextField("Email", text: $user.email)
+                    .textFieldStyle(PlainTextFieldStyle())
+                    .frame(height: 55)
+                    .padding([.horizontal], 7)
+                    .cornerRadius(5)
                     .overlay(RoundedRectangle(cornerRadius: 5).stroke(isEmailValid ? (focusedField == .email ? Color.blue : Color.gray.opacity(0.8)) : Color.red, lineWidth: 0.8))
                     .focused($focusedField, equals: .email)
                     .keyboardType(.emailAddress)
 
-                CustomTextField(placeholder:"Password", text: $user.password, isSecure: true)
+                SecureField("Password", text: $user.password)
+                    .textFieldStyle(PlainTextFieldStyle())
+                    .frame(height: 55)
+                    .padding([.horizontal], 7)
+                    .cornerRadius(5)
                     .overlay(RoundedRectangle(cornerRadius: 5).stroke(focusedField == .password ? Color.blue: Color.gray.opacity(0.8)))
                     .focused($focusedField, equals: .password)
             }
@@ -90,7 +105,7 @@ struct CreateAccountView: View {
                     isEmailValid = user.email.isValidEmail
 
                     if isEmailValid {
-                        print("Next button tapped")
+                        print("Create button tapped")
                     }
                 }) {
                     Text("Create")

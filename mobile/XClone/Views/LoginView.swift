@@ -56,12 +56,20 @@ struct LoginView: View {
             Spacer()
 
             VStack(spacing: 20) {
-                CustomTextField(placeholder: "Email", text: $user.email)
+                TextField("Email", text: $user.email)
+                    .textFieldStyle(PlainTextFieldStyle())
+                    .frame(height: 55)
+                    .padding([.horizontal], 7)
+                    .cornerRadius(5)
                     .overlay(RoundedRectangle(cornerRadius: 5).stroke(isEmailValid ? (focusedField == .email ? Color.blue : Color.gray.opacity(0.8)) : Color.red, lineWidth: 0.8))
                     .focused($focusedField, equals: .email)
                     .keyboardType(.emailAddress)
 
-                CustomTextField(placeholder: "Password", text: $user.password, isSecure: true)
+                SecureField("Password", text: $user.password)
+                    .textFieldStyle(PlainTextFieldStyle())
+                    .frame(height: 55)
+                    .padding([.horizontal], 7)
+                    .cornerRadius(5)
                     .overlay(RoundedRectangle(cornerRadius: 5).stroke(focusedField == .password ? Color.blue : Color.gray.opacity(0.8)))
                     .focused($focusedField, equals: .password)
             }
