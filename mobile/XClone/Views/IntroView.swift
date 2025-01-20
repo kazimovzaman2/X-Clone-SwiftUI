@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct IntroView: View {
-    @Binding var isAuthenticated: Bool
     @Environment(\.colorScheme) var colorScheme
+
+    @ObservedObject var authStateManager: AuthStateManager
 
     var body: some View {
         NavigationView {
@@ -33,7 +34,7 @@ struct IntroView: View {
                 Spacer()
 
                 VStack(spacing: 8) {
-                    NavigationLink(destination: LoginView(isAuthenticated: $isAuthenticated)) {
+                    NavigationLink(destination: LoginView(viewModel: LoginViewModel(authStateManager: authStateManager))) {
                         HStack {
                             Image("googleLogo")
                                 .resizable()
@@ -55,7 +56,7 @@ struct IntroView: View {
 
                     LabelledDivider(label: "or")
 
-                    NavigationLink(destination: CreateAccountView(isAuthenticated: $isAuthenticated)) {
+                    NavigationLink(destination: CreateAccountView()) {
                         Text("Create Account")
                             .fontWeight(.bold)
                             .frame(maxWidth: .infinity, minHeight: 50)
@@ -80,7 +81,7 @@ struct IntroView: View {
                         .font(.footnote)
                         .foregroundColor(.gray)
                     
-                    NavigationLink(destination: LoginView(isAuthenticated: $isAuthenticated)) {
+                    NavigationLink(destination: LoginView(viewModel: LoginViewModel(authStateManager: authStateManager))) {
                         Text("Log in")
                             .font(.footnote)
                             .foregroundColor(.blue)
@@ -95,5 +96,5 @@ struct IntroView: View {
 }
 
 #Preview {
-    IntroView(isAuthenticated: .constant(false))
+    IntroView(authStateManager: AuthStateManager.shared)
 }

@@ -9,14 +9,14 @@ import SwiftUI
 
 @main
 struct XCloneApp: App {
-    @State private var isAuthenticated: Bool = false
+    @StateObject private var authStateManager = AuthStateManager.shared
 
     var body: some Scene {
         WindowGroup {
-            if isAuthenticated {
-                FeedView(isAuthenticated: $isAuthenticated)
+            if authStateManager.isAuthenticated {
+                FeedView(authStateManager: authStateManager)
             } else {
-                IntroView(isAuthenticated: $isAuthenticated)
+                IntroView(authStateManager: authStateManager)
             }
         }
     }

@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct FeedView: View {
-    @Binding var isAuthenticated: Bool
+    @ObservedObject var authStateManager: AuthStateManager
+
     @State private var tweets: [String] = [
         "Hello, XClone!",
         "Building a SwiftUI app is fun! 🚀",
@@ -27,7 +28,7 @@ struct FeedView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Logout") {
-                        isAuthenticated = false
+                        authStateManager.logout()
                     }
                 }
             }
@@ -36,5 +37,5 @@ struct FeedView: View {
 }
 
 #Preview {
-    FeedView(isAuthenticated: .constant(true))
+    FeedView(authStateManager: AuthStateManager.shared)
 }

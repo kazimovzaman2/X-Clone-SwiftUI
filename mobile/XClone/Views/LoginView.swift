@@ -8,25 +8,21 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State private var user = LoginData()
-    @State private var isEmailValid = true
+    @StateObject private var viewModel: LoginViewModel
     @FocusState private var focusedField: Field?
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.presentationMode) var presentationMode
-
-    @Binding var isAuthenticated: Bool
 
     enum Field: Hashable {
         case email, password
     }
 
-    private var isFormValid: Bool {
-        !user.email.isEmpty && !user.password.isEmpty
+    init(viewModel: LoginViewModel) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
     }
 
     var body: some View {
         VStack(spacing: 20) {
-
             HStack {
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
@@ -58,24 +54,38 @@ struct LoginView: View {
             Spacer()
 
             VStack(spacing: 20) {
-                TextField("Email", text: $user.email)
+                TextField("Email", text: $viewModel.user.email)
                     .textFieldStyle(PlainTextFieldStyle())
                     .frame(height: 55)
                     .padding([.horizontal], 7)
                     .cornerRadius(5)
-                    .overlay(RoundedRectangle(cornerRadius: 5).stroke(isEmailValid ? (focusedField == .email ? Color.blue : Color.gray.opacity(0.8)) : Color.red, lineWidth: 0.8))
+                    .overlay(RoundedRectangle(cornerRadius: 5).stroke(viewModel.isEmailValid ? (focusedField == .email ? Color.blue : Color.gray.opacity(0.8)) : Color.red, lineWidth: 0.8))
                     .focused($focusedField, equals: .email)
                     .keyboardType(.emailAddress)
+                    .onChange(of: viewModel.user.email) { _, _ in
+                        viewModel.validateEmail()
+                        viewModel.validateForm()
+                    }
 
-                SecureField("Password", text: $user.password)
+                SecureField("Password", text: $viewModel.user.password)
                     .textFieldStyle(PlainTextFieldStyle())
                     .frame(height: 55)
                     .padding([.horizontal], 7)
                     .cornerRadius(5)
                     .overlay(RoundedRectangle(cornerRadius: 5).stroke(focusedField == .password ? Color.blue : Color.gray.opacity(0.8)))
                     .focused($focusedField, equals: .password)
+                    .onChange(of: viewModel.user.password) { _, _ in
+                        viewModel.validateForm()
+                    }
             }
             .padding(.horizontal, 40)
+            
+            if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .font(.footnote)
+                    .padding(.horizontal, 40)
+            }
 
             Spacer()
             Spacer()
@@ -87,29 +97,24 @@ struct LoginView: View {
             HStack {
                 Spacer()
                 Button(action: {
-                    isEmailValid = user.email.isValidEmail
-
-                    if isEmailValid {
-                        isAuthenticated = true
+                    Task {
+                        await viewModel.login()
                     }
                 }) {
                     Text("Log In")
                         .fontWeight(.bold)
                         .frame(width: 90, height: 40)
-                        .background(isFormValid ? Color.blue : Color.gray)
+                        .background(viewModel.isFormValid ? Color.blue : Color.gray)
                         .foregroundColor(.white)
                         .cornerRadius(50)
                         .padding(.horizontal, 20)
                 }
-                .disabled(!isFormValid)
+                .disabled(!viewModel.isFormValid)
             }
-        }
-        .onAppear {
-            user = LoginData()
         }
     }
 }
 
 #Preview {
-    LoginView(isAuthenticated: .constant(false))
+    LoginView(viewModel: LoginViewModel())
 }

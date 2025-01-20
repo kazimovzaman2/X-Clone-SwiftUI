@@ -13,8 +13,6 @@ struct CreateAccountView: View {
     @FocusState private var focusedField: Field?
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.presentationMode) var presentationMode
-
-    @Binding var isAuthenticated: Bool
     
     enum Field: Hashable {
         case firstName, lastName, email, password
@@ -107,7 +105,7 @@ struct CreateAccountView: View {
                     isEmailValid = user.email.isValidEmail
 
                     if isEmailValid {
-                        isAuthenticated = true
+                        
                     }
                 }) {
                     Text("Create")
@@ -128,5 +126,5 @@ struct CreateAccountView: View {
 }
 
 #Preview {
-    CreateAccountView(isAuthenticated: .constant(false))
+    CreateAccountView()
 }
