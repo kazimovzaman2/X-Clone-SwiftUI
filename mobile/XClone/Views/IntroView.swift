@@ -34,7 +34,7 @@ struct IntroView: View {
                 Spacer()
                 
                 VStack(spacing: 8) {
-                    NavigationLink(destination: LoginView(viewModel: LoginViewModel(authStateManager: authStateManager))) {
+                    NavigationLink(destination: LoginView(authStateManager: authStateManager)) {
                         HStack {
                             Image("googleLogo")
                                 .resizable()
@@ -56,7 +56,7 @@ struct IntroView: View {
                     
                     LabelledDivider(label: "or")
                     
-                    NavigationLink(destination: CreateAccountView()) {
+                    NavigationLink(destination: CreateAccountView(authStateManager: authStateManager)) {
                         Text("Create Account")
                             .fontWeight(.bold)
                             .frame(maxWidth: .infinity, minHeight: 50)
@@ -81,7 +81,7 @@ struct IntroView: View {
                         .font(.footnote)
                         .foregroundColor(.gray)
                     
-                    NavigationLink(destination: LoginView(viewModel: LoginViewModel(authStateManager: authStateManager))) {
+                    NavigationLink(destination: LoginView(authStateManager: authStateManager)) {
                         Text("Log in")
                             .font(.footnote)
                             .foregroundColor(.blue)

@@ -41,6 +41,7 @@ class AuthService {
     private let baseURL = "http://127.0.0.1:8000/api"
     private let loginEndpoint = "/jwt/create/"
     private let logoutEndpoint = "/jwt/logout/"
+    private let registerEndpoint = "/register/"
     
     func login(email: String, password: String) async throws -> AuthTokens {
         guard let url = URL(string: baseURL + loginEndpoint) else {
@@ -111,6 +112,57 @@ class AuthService {
             
             if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any], let message = json["message"] as? String {
                 return message
+            } else {
+                throw AuthError.cannotParseResponse
+            }
+        } catch let error as AuthError {
+            throw error
+        } catch {
+            throw AuthError.networkError("An unexpected error occurred.")
+        }
+    }
+    
+    func register(firstName: String, lastName: String, email: String, password: String) async throws -> AuthTokens {
+        guard let url = URL(string: baseURL + registerEndpoint) else {
+            throw URLError(.badURL)
+        }
+        
+        let requestBody = [
+            "first_name": firstName,
+            "last_name": lastName,
+            "email": email,
+            "password": password
+        ]
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 201 else {
+                if !data.isEmpty,
+                   let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                    
+                    if let errors = json["email"] as? [String] {
+                        throw AuthError.serverError(errors.first ?? "Unknown email error")
+                    }
+                    
+                    if let errors = json["errors"] as? [String: Any],
+                       let firstError = errors.values.first as? [String], let errorDetail = firstError.first {
+                        throw AuthError.serverError(errorDetail)
+                    }
+                    
+                    throw AuthError.badServerResponse
+                } else {
+                    throw AuthError.badServerResponse
+                }
+            }
+            
+            if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any], let accessToken = json["access"] as? String, let refreshToken = json["refresh"] as? String {
+                return AuthTokens(accessToken: accessToken, refreshToken: refreshToken)
             } else {
                 throw AuthError.cannotParseResponse
             }

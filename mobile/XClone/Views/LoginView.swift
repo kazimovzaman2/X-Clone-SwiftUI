@@ -17,8 +17,8 @@ struct LoginView: View {
         case email, password
     }
     
-    init(viewModel: LoginViewModel) {
-        self._viewModel = StateObject(wrappedValue: viewModel)
+    init(authStateManager: AuthStateManager = .shared) {
+        _viewModel = StateObject(wrappedValue: LoginViewModel(authStateManager: authStateManager))
     }
     
     var body: some View {
@@ -126,5 +126,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView(viewModel: LoginViewModel())
+    LoginView(authStateManager: AuthStateManager.shared)
 }

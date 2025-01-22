@@ -10,8 +10,6 @@ from apps.users.managers import CustomUserManager
 class User(AbstractUser):
     """Custom implementation of user model."""
 
-    DEFAULT_PROFILE_PICTURE = "defaults/user.png"
-
     first_name = models.CharField(_("first name"), max_length=150)
     last_name = models.CharField(_("last name"), max_length=150)
     email = models.EmailField(
@@ -35,3 +33,9 @@ class User(AbstractUser):
 
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name} - {self.email}"
+
+    def save(self, *args, **kwargs):
+        """Override the save method to automatically set the username to email."""
+        if not self.username:
+            self.username = self.email
+        super().save(*args, **kwargs)

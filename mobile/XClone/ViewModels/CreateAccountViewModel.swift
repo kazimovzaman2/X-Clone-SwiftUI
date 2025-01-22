@@ -1,16 +1,16 @@
 //
-//  LoginViewModel.swift
+//  CreateAccountViewModel.swift
 //  XClone
 //
-//  Created by Zaman Kazimov on 20.01.25.
+//  Created by Zaman Kazimov on 22.01.25.
 //
 
 import Foundation
 import SwiftUI
 
 @MainActor
-class LoginViewModel: ObservableObject {
-    @Published var user = LoginData()
+class CreateAccountViewModel: ObservableObject {
+    @Published var user = CreateAccountData()
     @Published var isEmailValid = true
     @Published var isFormValid = false
     @Published var isLoading = false
@@ -30,16 +30,17 @@ class LoginViewModel: ObservableObject {
     }
     
     func validateForm() {
-        isFormValid = !user.email.isEmpty && !user.password.isEmpty
+        isFormValid = !user.email.isEmpty && !user.password.isEmpty && !user.firstName.isEmpty && !user.lastName.isEmpty
     }
     
-    func login() async {
+    func register() async {
         isLoading = true
         defer { isLoading = false }
         errorMessage = nil
         
         do {
-            let tokens = try await authService.login(email: user.email, password: user.password)
+            let tokens = try await authService.register(firstName: user.firstName, lastName: user.lastName, email: user.email, password: user.password)
+            print(tokens)
             
             authStateManager.login(tokens: tokens)
         } catch let error as AuthError {
