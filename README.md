@@ -41,10 +41,7 @@ An X social media app clone built with SwiftUI for the front end and Django for 
     ```bash
     open mobile/X-Clone-SwiftUI.xcodeproj
     ```
-3. Apply migrations:
-    ```bash
-    Build and run the app on your iOS simulator or device.
-    ```
+3. Build and run the app on your iOS simulator or device.
 
 ## Configuration
 - Set the API endpoint URL in the frontend code to match your Django server URL.
