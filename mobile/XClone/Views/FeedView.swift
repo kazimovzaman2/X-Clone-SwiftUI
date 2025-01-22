@@ -8,8 +8,12 @@
 import SwiftUI
 
 struct FeedView: View {
-    @ObservedObject var authStateManager: AuthStateManager
-
+    @StateObject private var viewModel: FeedViewModel
+    
+    init(authStateManager: AuthStateManager = .shared) {
+        _viewModel = StateObject(wrappedValue: FeedViewModel(authStateManager: authStateManager))
+    }
+    
     @State private var tweets: [String] = [
         "Hello, XClone!",
         "Building a SwiftUI app is fun! 🚀",
@@ -17,7 +21,7 @@ struct FeedView: View {
         "Stay curious and keep learning. 🌟",
         "Follow me for more updates!"
     ]
-
+    
     var body: some View {
         NavigationStack {
             List(tweets, id: \.self) { tweet in
@@ -28,7 +32,9 @@ struct FeedView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Logout") {
-                        authStateManager.logout()
+                        Task {
+                            await viewModel.logout()
+                        }
                     }
                 }
             }

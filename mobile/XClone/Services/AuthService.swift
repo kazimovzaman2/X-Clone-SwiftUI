@@ -37,20 +37,21 @@ enum AuthError: LocalizedError {
 class AuthService {
     static let shared = AuthService()
     private init() {}
-
+    
     private let baseURL = "http://127.0.0.1:8000/api"
     private let loginEndpoint = "/jwt/create/"
-
-    func login(email: String, password: String) async throws -> (accessToken: String, refreshToken: String) {
+    private let logoutEndpoint = "/jwt/logout/"
+    
+    func login(email: String, password: String) async throws -> AuthTokens {
         guard let url = URL(string: baseURL + loginEndpoint) else {
             throw URLError(.badURL)
         }
-
+        
         let requestBody = [
             "email": email,
             "password": password
         ]
-
+        
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -58,7 +59,7 @@ class AuthService {
         
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
-
+            
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
                 if !data.isEmpty,
                    let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
@@ -70,16 +71,53 @@ class AuthService {
                     throw AuthError.badServerResponse
                 }
             }
-
+            
             if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any], let accessToken = json["access"] as? String, let refreshToken = json["refresh"] as? String {
-                return (accessToken, refreshToken)
+                return AuthTokens(accessToken: accessToken, refreshToken: refreshToken)
             } else {
                 throw AuthError.cannotParseResponse
             }
         } catch let error as AuthError {
             throw error
         } catch {
-            throw AuthError.networkError("Some error happen here")
+            throw AuthError.networkError("An unexpected error occurred.")
+        }
+    }
+    
+    func logout(accessToken: String) async throws -> String {
+        guard let url = URL(string: baseURL + logoutEndpoint) else {
+            throw AuthError.badURL
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                if !data.isEmpty,
+                   let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                   let errors = json["errors"] as? [[String: Any]],
+                   let firstError = errors.first,
+                   let errorDetail = firstError["detail"] as? String {
+                    throw AuthError.serverError(errorDetail)
+                } else {
+                    throw AuthError.badServerResponse
+                }
+            }
+            
+            if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any], let message = json["message"] as? String {
+                return message
+            } else {
+                throw AuthError.cannotParseResponse
+            }
+        } catch let error as AuthError {
+            throw error
+        } catch {
+            throw AuthError.networkError("An unexpected error occurred.")
         }
     }
 }

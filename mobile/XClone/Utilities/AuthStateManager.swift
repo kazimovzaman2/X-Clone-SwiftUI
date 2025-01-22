@@ -13,24 +13,27 @@ class AuthStateManager: ObservableObject {
             UserDefaults.standard.set(isAuthenticated, forKey: "isAuthenticated")
         }
     }
-
+    
     static let shared = AuthStateManager()
-
+    
     private init() {
         self.isAuthenticated = UserDefaults.standard.bool(forKey: "isAuthenticated")
     }
-
-    func login() {
+    
+    func login(tokens: AuthTokens) {
         isAuthenticated = true
+        
+        KeychainManager.save(key: "accessToken", value: tokens.accessToken)
+        KeychainManager.save(key: "refreshToken", value: tokens.refreshToken)
     }
-
+    
     func logout() {
         self.isAuthenticated = false
-
+        
         KeychainManager.delete(key: "accessToken")
         KeychainManager.delete(key: "refreshToken")
     }
-
+    
     func checkAuthState() -> Bool {
         if KeychainManager.load(key: "accessToken") != nil,
            KeychainManager.load(key: "refreshToken") != nil {

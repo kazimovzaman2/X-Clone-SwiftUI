@@ -9,9 +9,9 @@ import SwiftUI
 
 struct IntroView: View {
     @Environment(\.colorScheme) var colorScheme
-
+    
     @ObservedObject var authStateManager: AuthStateManager
-
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -22,17 +22,17 @@ struct IntroView: View {
                         .frame(width: 25, height: 25)
                 }
                 .padding()
-
+                
                 Spacer()
-
+                
                 Text("See what's happening in the world right now.")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .lineLimit(3)
                     .frame(maxWidth: .infinity, alignment: .leading)
-
+                
                 Spacer()
-
+                
                 VStack(spacing: 8) {
                     NavigationLink(destination: LoginView(viewModel: LoginViewModel(authStateManager: authStateManager))) {
                         HStack {
@@ -40,7 +40,7 @@ struct IntroView: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 20, height: 20)
-
+                            
                             Text("Continue with Google")
                                 .fontWeight(.bold)
                                 .foregroundColor(.black)
@@ -53,9 +53,9 @@ struct IntroView: View {
                                 .stroke(Color.gray.opacity(0.3), lineWidth: 2)
                         }
                     }
-
+                    
                     LabelledDivider(label: "or")
-
+                    
                     NavigationLink(destination: CreateAccountView()) {
                         Text("Create Account")
                             .fontWeight(.bold)
@@ -65,17 +65,17 @@ struct IntroView: View {
                             .cornerRadius(30)
                     }
                 }
-
+                
                 Text("""
                      By signing up, you agree to our [Terms](https://x.com/en/tos), [Privacy Policy](https://x.com/en/privacy), and [Cookie Use](https://help.x.com/en/rules-and-policies/x-cookies#:~:text=Cookies%20and%20similar%20technologies%20like,%2C%20embeds%2C%20and%20email%20communications.).
                      """)
-                    .font(.footnote)
-                    .foregroundColor(.gray)
-                    .padding(.top, 20)
-                    .padding(.bottom, 30)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-
+                .font(.footnote)
+                .foregroundColor(.gray)
+                .padding(.top, 20)
+                .padding(.bottom, 30)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
+                
                 HStack (spacing: 3) {
                     Text("Have an account already?")
                         .font(.footnote)

@@ -30,7 +30,7 @@ class KeychainManager {
             kSecReturnData: true,
             kSecMatchLimit: kSecMatchLimitOne
         ] as CFDictionary
-
+        
         var dataTypeRef: AnyObject?
         if SecItemCopyMatching(query, &dataTypeRef) == noErr,
            let data = dataTypeRef as? Data {
@@ -44,7 +44,7 @@ class KeychainManager {
             kSecClass: kSecClassGenericPassword,
             kSecAttrAccount: key
         ] as CFDictionary
-
+        
         SecItemDelete(query)
     }
 }

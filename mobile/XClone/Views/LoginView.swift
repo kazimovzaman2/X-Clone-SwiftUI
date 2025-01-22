@@ -12,15 +12,15 @@ struct LoginView: View {
     @FocusState private var focusedField: Field?
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.presentationMode) var presentationMode
-
+    
     enum Field: Hashable {
         case email, password
     }
-
+    
     init(viewModel: LoginViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
-
+    
     var body: some View {
         ZStack {
             VStack(spacing: 20) {
@@ -40,7 +40,6 @@ struct LoginView: View {
                         .scaledToFit()
                         .frame(width: 25, height: 25)
                         .frame(maxWidth: .infinity, alignment: .center)
-                    
                     Spacer()
                         .frame(maxWidth: .infinity)
                 }
@@ -63,6 +62,7 @@ struct LoginView: View {
                         .overlay(RoundedRectangle(cornerRadius: 5).stroke(viewModel.isEmailValid ? (focusedField == .email ? Color.blue : Color.gray.opacity(0.8)) : Color.red, lineWidth: 0.8))
                         .focused($focusedField, equals: .email)
                         .keyboardType(.emailAddress)
+                        .autocapitalization(.none)
                         .onChange(of: viewModel.user.email) { _, _ in
                             viewModel.validateEmail()
                             viewModel.validateForm()

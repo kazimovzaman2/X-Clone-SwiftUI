@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct XCloneApp: App {
     @StateObject private var authStateManager = AuthStateManager.shared
-
+    
     var body: some Scene {
         WindowGroup {
             if authStateManager.isAuthenticated {

@@ -17,15 +17,15 @@ struct CreateAccountView: View {
     enum Field: Hashable {
         case firstName, lastName, email, password
     }
-
+    
     private var isFormValid: Bool {
         !user.firstName.isEmpty && !user.lastName.isEmpty && !user.email.isEmpty && !user.password.isEmpty
     }
-
-
+    
+    
     var body: some View {
         VStack(spacing: 20) {
-
+            
             HStack {
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
@@ -35,28 +35,28 @@ struct CreateAccountView: View {
                         .foregroundColor(colorScheme == .light ? .black : .white)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-
+                
                 Image(colorScheme == .light ? "logoWhiteMode" : "logoDarkMode")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 25, height: 25)
                     .frame(maxWidth: .infinity, alignment: .center)
-
+                
                 Spacer()
                     .frame(maxWidth: .infinity)
             }
             .navigationBarBackButtonHidden(true)
             .padding()
-
-
+            
+            
             Text("Create Your Account")
                 .font(.title)
                 .fontWeight(.bold)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 40)
-
+            
             Spacer()
-
+            
             VStack(spacing: 20) {
                 TextField("First Name", text: $user.firstName)
                     .textFieldStyle(PlainTextFieldStyle())
@@ -65,7 +65,7 @@ struct CreateAccountView: View {
                     .cornerRadius(5)
                     .overlay(RoundedRectangle(cornerRadius: 5).stroke(focusedField == .firstName ? Color.blue : Color.gray.opacity(0.8)))
                     .focused($focusedField, equals: .firstName)
-
+                
                 TextField("Last Name", text: $user.lastName)
                     .textFieldStyle(PlainTextFieldStyle())
                     .frame(height: 55)
@@ -73,7 +73,7 @@ struct CreateAccountView: View {
                     .cornerRadius(5)
                     .overlay(RoundedRectangle(cornerRadius: 5).stroke(focusedField == .lastName ? Color.blue: Color.gray.opacity(0.8)))
                     .focused($focusedField, equals: .lastName)
-
+                
                 TextField("Email", text: $user.email)
                     .textFieldStyle(PlainTextFieldStyle())
                     .frame(height: 55)
@@ -82,7 +82,8 @@ struct CreateAccountView: View {
                     .overlay(RoundedRectangle(cornerRadius: 5).stroke(isEmailValid ? (focusedField == .email ? Color.blue : Color.gray.opacity(0.8)) : Color.red, lineWidth: 0.8))
                     .focused($focusedField, equals: .email)
                     .keyboardType(.emailAddress)
-
+                    .autocapitalization(.none)
+                
                 SecureField("Password", text: $user.password)
                     .textFieldStyle(PlainTextFieldStyle())
                     .frame(height: 55)
@@ -92,18 +93,18 @@ struct CreateAccountView: View {
                     .focused($focusedField, equals: .password)
             }
             .padding(.horizontal, 40)
-
+            
             Spacer()
-
+            
             Divider()
                 .frame(height: 1)
                 .background(Color.gray.opacity(0.2))
-
+            
             HStack {
                 Spacer()
                 Button(action: {
                     isEmailValid = user.email.isValidEmail
-
+                    
                     if isEmailValid {
                         
                     }

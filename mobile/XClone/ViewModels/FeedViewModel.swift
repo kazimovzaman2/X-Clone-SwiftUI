@@ -1,46 +1,36 @@
 //
-//  LoginViewModel.swift
+//  FeedViewModel.swift
 //  XClone
 //
-//  Created by Zaman Kazimov on 20.01.25.
+//  Created by Zaman Kazimov on 22.01.25.
 //
 
 import Foundation
 import SwiftUI
 
 @MainActor
-class LoginViewModel: ObservableObject {
-    @Published var user = LoginData()
-    @Published var isEmailValid = true
-    @Published var isFormValid = false
-    @Published var isLoading = false
+class FeedViewModel: ObservableObject {
     @Published var errorMessage: String?
+    @ObservedObject var authStateManager: AuthStateManager
     
     private let authService: AuthService
-    private let authStateManager: AuthStateManager
     
     init(authService: AuthService = .shared, authStateManager: AuthStateManager = .shared) {
         self.authService = authService
         self.authStateManager = .shared
     }
     
-    func validateEmail() {
-        isEmailValid = user.email.isValidEmail
-    }
-    
-    func validateForm() {
-        isFormValid = !user.email.isEmpty && !user.password.isEmpty
-    }
-    
-    func login() async {
-        isLoading = true
-        defer { isLoading = false }
+    func logout() async {
         errorMessage = nil
         
         do {
-            let tokens = try await authService.login(email: user.email, password: user.password)
+            guard let accessToken = KeychainManager.load(key: "accessToken") else {
+                errorMessage = "Access token is missing."
+                return
+            }
+            _ = try await authService.logout(accessToken: accessToken)
             
-            authStateManager.login(tokens: tokens)
+            authStateManager.logout()
         } catch let error as AuthError {
             switch error {
             case .badURL:
