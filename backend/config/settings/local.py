@@ -23,7 +23,7 @@ else:
 # JWT
 # ------------------------------------------------------------------------------
 # https://django-rest-framework-simplejwt.readthedocs.io/en/latest
-SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"] = timedelta(days=1)  # noqa: F405
+SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"] = timedelta(minutes=1)  # noqa: F405
 SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"] = timedelta(days=7)  # noqa: F405
 
 # EMAIL
