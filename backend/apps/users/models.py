@@ -10,12 +10,19 @@ from apps.users.managers import CustomUserManager
 class User(AbstractUser):
     """Custom implementation of user model."""
 
+    DEFAULT_PROFILE_PICTURE = "defaults/user.png"
+
     first_name = models.CharField(_("first name"), max_length=150)
     last_name = models.CharField(_("last name"), max_length=150)
     email = models.EmailField(
         _("email address"),
         unique=True,
         help_text=_("Email address must be unique."),
+    )
+    profile_picture = models.ImageField(
+        _("profile picture"),
+        upload_to="users/profile_pictures/",
+        default=DEFAULT_PROFILE_PICTURE,
     )
     updated_at = models.DateTimeField(_("update time"), auto_now=True, null=True)
     REQUIRED_FIELDS = ["first_name", "last_name"]
