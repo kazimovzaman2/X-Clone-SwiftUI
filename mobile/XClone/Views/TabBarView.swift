@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct TabBarView: View {
+    @ObservedObject var authStateManager: AuthStateManager
+
     var body: some View {
         TabView {
-            FeedView()
+            FeedView(authStateManager: authStateManager)
                 .tabItem {
                     Label("Feed", systemImage: "house.fill")
                 }
@@ -34,5 +36,5 @@ struct TabBarView: View {
 }
 
 #Preview {
-    TabBarView()
+    TabBarView(authStateManager: AuthStateManager.shared)
 }

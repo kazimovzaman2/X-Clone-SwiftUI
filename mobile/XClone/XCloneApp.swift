@@ -14,7 +14,7 @@ struct XCloneApp: App {
     var body: some Scene {
         WindowGroup {
             if authStateManager.isAuthenticated {
-                FeedView(authStateManager: authStateManager)
+                TabBarView(authStateManager: authStateManager)
             } else {
                 IntroView(authStateManager: authStateManager)
             }
