@@ -21,6 +21,7 @@ urlpatterns = [
             [
                 path("", include("config.router")),
                 path("", include("apps.users.urls")),
+                path("", include("apps.posts.urls")),
             ]
         ),
     ),

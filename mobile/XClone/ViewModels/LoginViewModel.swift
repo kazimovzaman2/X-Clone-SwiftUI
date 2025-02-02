@@ -54,6 +54,8 @@ class LoginViewModel: ObservableObject {
                 errorMessage = "Failed to process the response. Please try again."
             case .networkError(let message):
                 errorMessage = "Network error: \(message)"
+            case .unauthorized:
+                errorMessage = "Invalid credentials. Please try again."
             }
         } catch {
             errorMessage = "Login failed due to an unknown error. Please try again."

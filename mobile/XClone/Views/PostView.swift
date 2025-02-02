@@ -8,19 +8,6 @@
 import SwiftUI
 import AVKit
 
-struct PostModel: Identifiable {
-    let id = UUID()
-    let username: String
-    let firstName: String
-    let content: String
-    let timestamp: Date
-    let image: URL?
-    let commentCount: Int
-    let repostCount: Int
-    let likeCount: Int
-    let chartCount: Int
-}
-
 
 struct PostView: View {
     let post: PostModel
@@ -28,7 +15,10 @@ struct PostView: View {
     private var formattedTimestamp: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd MMM yy"
-        return formatter.string(from: post.timestamp)
+        if let date = ISO8601DateFormatter().date(from: post.postedAt) {
+            return formatter.string(from: date)
+        }
+        return "Unknown Date"
     }
     
     private func formatCount(_ count: Int) -> String {
@@ -51,10 +41,10 @@ struct PostView: View {
             
             VStack {
                 HStack {
-                    Text(post.firstName)
+                    Text(post.user.firstName)
                         .font(.headline)
                     
-                    Text("@\(post.username) · \(formattedTimestamp)")
+                    Text("@\(post.user.email) · \(formattedTimestamp)")
                         .font(.subheadline)
                         .foregroundStyle(.gray)
                 }
@@ -65,7 +55,7 @@ struct PostView: View {
                     .font(.body)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
-                if let imageURL = post.image {
+                if let imageURL = URL(string: post.file) {
                     AsyncImage(url: imageURL) { phase in
                         switch phase {
                         case .empty:
@@ -91,10 +81,10 @@ struct PostView: View {
                 }
                 
                 HStack(spacing: 15) {
-                    actionButton(label: "Comment", systemImage: "bubble.left", count: post.commentCount)
-                    actionButton(label: "Repost", systemImage: "arrow.triangle.2.circlepath", count: post.repostCount)
-                    actionButton(label: "Like", systemImage: "heart", count: post.likeCount)
-                    actionButton(label: "Chart", systemImage: "chart.bar.xaxis", count: post.chartCount)
+                    actionButton(label: "Comment", systemImage: "bubble.left", count: 5)
+                    actionButton(label: "Repost", systemImage: "arrow.triangle.2.circlepath", count: 4)
+                    actionButton(label: "Like", systemImage: "heart", count: 4)
+                    actionButton(label: "Chart", systemImage: "chart.bar.xaxis", count: 4)
                     
                     HStack (spacing: 10) {
                         actionButtonWithoutCount(label: "Save", systemImage: "bookmark")
@@ -140,15 +130,5 @@ struct PostView: View {
 }
 
 #Preview {
-    PostView(post: PostModel(
-        username: "kazimovzaman2",
-        firstName: "Zaman",
-        content: "Breaking! New White House Press Secretary Vows To Call Out Lying MSM Outlets For Producing Fake News Against Trump, His Family And His Agenda.",
-        timestamp: Date(),
-        image: URL(string: "https://w0.peakpx.com/wallpaper/961/425/HD-wallpaper-2023-porsche-911-gt3-rs-coupe-flat-6-car.jpg"),
-        commentCount: 10,
-        repostCount: 5,
-        likeCount: 12300,
-        chartCount: 700
-    ))
+    PostView(post: PostModel(id: 3, file: "https://images-porsche.imgix.net/-/media/1DBDC37E82084CF496EE48FCCE48BE0A_4D115F6379CF4C299F1F38641CE865F0_911-gt3-side?w=600&q=85&crop=faces%2Centropy%2Cedges&auto=format", content: "test", postedAt: "2025-01-31T20:50:10.215193+04:00", user: UserModel(id: 1, firstName: "Zaman", lastName: "Kazimov", email: "kazimovzaman2@gmail.com", profilePicture: "https://images-porsche.imgix.net/-/media/1DBDC37E82084CF496EE48FCCE48BE0A_4D115F6379CF4C299F1F38641CE865F0_911-gt3-side?w=600&q=85&crop=faces%2Centropy%2Cedges&auto=format")))
 }

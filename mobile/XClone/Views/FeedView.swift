@@ -11,31 +11,6 @@ struct FeedView: View {
     @StateObject private var viewModel: FeedViewModel
     @Environment(\.colorScheme) var colorScheme
     
-    private var posts: [PostModel] = [
-        PostModel(
-            username: "kazimovzaman2",
-            firstName: "Zaman",
-            content: "Breaking! New White House Press Secretary Vows To Call Out Lying MSM Outlets For Producing Fake News Against Trump, His Family And His Agenda.",
-            timestamp: Date(),
-            image: URL(string: "https://w0.peakpx.com/wallpaper/961/425/HD-wallpaper-2023-porsche-911-gt3-rs-coupe-flat-6-car.jpg"),
-            commentCount: 10,
-            repostCount: 5,
-            likeCount: 12300,
-            chartCount: 700
-        ),
-        PostModel(
-            username: "john_doe",
-            firstName: "John",
-            content: "Check out my latest adventure in the mountains!",
-            timestamp: Date().addingTimeInterval(-3600),
-            image: URL(string: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg/800px-Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg"),
-            commentCount: 50,
-            repostCount: 20,
-            likeCount: 20000,
-            chartCount: 1000
-        )
-    ]
-    
     init(authStateManager: AuthStateManager = .shared) {
         _viewModel = StateObject(wrappedValue: FeedViewModel(authStateManager: authStateManager))
     }
@@ -60,6 +35,11 @@ struct FeedView: View {
                     Button("Timeline Settings") {
                         print("Timelinse settings clicked...")
                     }
+                    Button("Logout") {
+                        Task {
+                            await viewModel.logout()
+                        }
+                    }
                 } label: {
                     Image(systemName: "ellipsis")
                         .rotationEffect(.degrees(90))
@@ -71,7 +51,7 @@ struct FeedView: View {
                 }
             }
             
-            List(posts) { post in
+            List(viewModel.posts, id: \.id) { post in
                 PostView(post: post)
                     .listRowInsets(EdgeInsets())
             }
