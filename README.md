@@ -10,6 +10,13 @@ An X social media app clone built with SwiftUI for the front end and Django for 
 - **Responsive UI**: A sleek, modern design built with SwiftUI.
 - **Backend API**: Django backend to handle user data, posts, and interactions.
 
+Screenshots:
+
+![1](https://github.com/user-attachments/assets/37a1b5e2-bf2e-45c8-84cd-58261040fd43)
+![2](https://github.com/user-attachments/assets/8d078b70-b0c0-4f60-bacc-8018ea773d89)
+![3](https://github.com/user-attachments/assets/c15a46de-2bb2-4d6b-a6d2-7a83a1cb4462)
+
+
 ## Installation
 
 ### Backend (Django)
